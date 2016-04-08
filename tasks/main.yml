@@ -1,0 +1,46 @@
+---
+
+- name: create sub-site dir
+  file:
+    path: "{{ drupal_main_path }}/sites/{{ institutional_fqdn }}"
+    state: directory
+
+- name: create database
+  mysql_db:
+    name: "{{ drupal_mysql_database }}"
+
+- name: create db user
+  mysql_user: 
+    name: "{{ drupal_mysql_user }}"
+    password: "{{ drupal_mysql_password }}"
+    priv: "{{ drupal_mysql_database }}.*:ALL"
+    state: present
+    
+- name: Install Drupal.
+  command: '
+    drush si standard -y
+    --account-name=admin
+    --account-pass=admin
+    --db-url=mysql://{{ drupal_mysql_user }}:{{ drupal_mysql_password }}@localhost/{{ drupal_mysql_database }}
+    --site-name="{{ drupal_site_name }}"
+    -l "{{ institutional_fqdn }}" --sites-subdir="{{ institutional_fqdn }}"
+    chdir={{ drupal_core_path }}
+    creates={{ drupal_core_path }}/settings.php'
+
+
+- name: set theme
+  command: 'drush vset theme_default subtheme_lsu'
+  args:
+    chdir: "{{ drupal_core_path }}"
+
+- name: set site name
+  command: 'drush vset site_name {{ drupal_site_name  }}'
+  args:
+    chdir: "{{ drupal_core_path }}"
+
+- name: update /etc/hosts
+  lineinfile:
+    dest: /etc/hosts
+    line: "127.0.0.1       {{ item }}"
+    insertafter: '127\.0\.0\.1\tlocalhost'
+  with_items: "{{ subdomains_to_enable  }}"
