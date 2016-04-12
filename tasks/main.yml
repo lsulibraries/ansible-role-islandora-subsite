@@ -30,15 +30,16 @@
 - name: give fedora access to the db
   lineinfile:
     dest:  /usr/local/fedora/server/config/filter-drupal.xml
-    line: '    <connection server="localhost" port="3306" dbname="{{ drupal_mysql_database  }}" user="{{ drupal_mysql_user }}" password="{{ drupal_mysql_password }}">
-      <sql>
-        <!--Different sql statement for each connection.  This is for drupal
-             multisites that are setup using one database with table prefixes.
-             We don\'t do this but some people might.-->
-        SELECT DISTINCT u.uid AS userid, u.name AS Name, u.pass AS Pass,r.name AS Role FROM (users u LEFT JOIN users_roles ON u.uid=users_roles.uid) LEFT JOIN role r ON r.rid=users_roles.rid WHERE u.name=? AND u.pass=?;
-      </sql>
-    </connection>'
-    insertbefore: "<\/FilterDrupal_Connection>"
+    line: |    
+      <connection server="localhost" port="3306" dbname="{{ drupal_mysql_database  }}" user="{{ drupal_mysql_user }}" password="{{ drupal_mysql_password }}">
+          <sql>
+          <!--Different sql statement for each connection.  This is for drupal
+          multisites that are setup using one database with table prefixes.
+          We don\'t do this but some people might.-->
+          SELECT DISTINCT u.uid AS userid, u.name AS Name, u.pass AS Pass,r.name AS Role FROM (users u LEFT JOIN users_roles ON u.uid=users_roles.uid) LEFT JOIN role r ON r.rid=users_roles.rid WHERE u.name=? AND u.pass=?;
+          </sql>
+      </connection>
+    insertbefore: "</FilterDrupal_Connection>"
 
 
 - name: set theme
