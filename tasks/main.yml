@@ -4,6 +4,7 @@
   file:
     path: "{{ drupal_main_path }}/sites/{{ institutional_fqdn }}"
     state: directory
+    owner: www-data
 
 - name: create database
   mysql_db:
