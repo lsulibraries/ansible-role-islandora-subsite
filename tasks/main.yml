@@ -41,6 +41,5 @@
 - name: update /etc/hosts
   lineinfile:
     dest: /etc/hosts
-    line: "127.0.0.1       {{ item }}"
+    line: "127.0.0.1       {{ institutional_fqdn }}"
     insertafter: '127\.0\.0\.1\tlocalhost'
-  with_items: "{{ subdomains_to_enable  }}"
