@@ -2,7 +2,7 @@
 
 - name: create sub-site dir
   file:
-    path: "{{ drupal_main_path }}/sites/{{ institutional_fqdn }}"
+    path: "/var/www/drupal/sites/{{ institutional_fqdn }}"
     state: directory
     owner: www-data
 
