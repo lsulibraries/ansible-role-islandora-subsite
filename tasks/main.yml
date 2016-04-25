@@ -42,11 +42,20 @@
       </connection>
     insertbefore: "</FilterDrupal_Connection>"
 
+- name: restart tomcat7 to pick up the new drupal filter
+  service:
+    name: tomcat7
+    state: restarted
 
-- name: set theme
-  command: 'drush vset theme_default subtheme_lsu'
-  args:
-    chdir: "{{ drupal_core_path }}"
+- wait_for:
+    port: 8080
+    delay: 20
+
+
+#- name: set theme
+#  command: 'drush vset theme_default subtheme_lsu'
+#  args:
+#    chdir: "{{ drupal_core_path }}"
 
 - name: set site name
   command: 'drush vset site_name {{ drupal_site_name  }}'
