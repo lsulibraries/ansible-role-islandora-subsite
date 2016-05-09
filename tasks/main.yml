@@ -30,7 +30,7 @@
 
 - name: give fedora access to the db
   lineinfile:
-    dest:  /usr/local/fedora/server/config/filter-drupal.xml
+    dest:  "{{ fedora_home }}/fedora/server/config/filter-drupal.xml"
     line: |    
       <connection server="localhost" port="3306" dbname="{{ drupal_mysql_database  }}" user="{{ drupal_mysql_user }}" password="{{ drupal_mysql_password }}">
           <sql>
